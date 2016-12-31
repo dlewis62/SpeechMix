@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="loading">Loading</div>
+<input id="typebox" type="text" name="fname" style="visibility:hidden"><br>
+<input id="submit" type="submit" value="Submit" style="visibility:hidden">
+
+<script>
+function getRandom(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
+//document.getElementById("typebox").style.visibility = "hidden"
+//document.getElementById("submit").style.visibility = "hidden"
+
+var wordb = {}
+
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "wordcnt.json", true);
+
+xhr.onload = function (e) {
+  if (xhr.readyState === 4) {
+    if (xhr.status === 200) {
+      wordb = JSON.parse(xhr.responseText);
+      document.getElementById("typebox").style.visibility = "visible"
+      document.getElementById("submit").style.visibility = "visible"
+      document.getElementById("loading").style.display = "none"
+    } 
+    else {
+      console.error(xhr.statusText);
+    }
+  }
+};
+
+xhr.onerror = function (e) {
+  console.error(xhr.statusText);
+};
+
+xhr.send(null);
+
+document.getElementById("typebox").addEventListener("keypress", letterTyped);
+document.getElementById("submit").addEventListener("click",submitClicked);
+
+function submitClicked() {
+
+  //console.log(document.getElementById("typebox").value)
+  var requestURL = "/request?" + "phrase=" + encodeURI(document.getElementById("typebox").value) + "&id=" + encodeURI(getRandom(10,1000000));
+  console.log(requestURL);
+  xhr.open("GET", requestURL,true);
+
+  xhr.onload = function (e) {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+      
+        console.log(xhr.responseText);
+      } 
+      else {
+        console.error(xhr.statusText);
+      }
+    }
+  };
+
+  xhr.onerror = function (e) {
+    console.error(xhr.statusText);
+  };
+
+xhr.send(null);
+
+}
+
+function letterTyped() {
+
+
+  //console.log(document.getElementById("typebox").value)
+
+}
+
+</script>
+
+</body>
+</html>
