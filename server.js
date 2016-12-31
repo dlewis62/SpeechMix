@@ -6,18 +6,25 @@ var app = express()
 var exec = require('child_process').exec;
 
 var wordb =  JSON.parse(fs.readFileSync("static/wordcnt.json")) 
-
+var fproc = {}
 clipsdir = "data/Clips/"
+staticdir = "static/"
 
-concatT = "concat:"
 
 var staticPath = path.join(__dirname, '/static');
 app.use(express.static(staticPath));
 
+app.get('/download',function(req,res){
+  
+  var ID = req.query.ID
+  res.send(JSON.stringify(fproc[ID]))
+
+})
+
 app.get('/request', function (req, res) {
 
   console.log("Request Received")
-  
+  var concatT = "concat:"  
   var numAppear;
   var filen;
   var startTime;
@@ -31,6 +38,7 @@ app.get('/request', function (req, res) {
   var numWord = Phrase.length
   var converts = 0
   console.log(req.query.phrase)
+  fproc[ID] = {stat:"converting",comp:0}
   Phrase.forEach(function(element){ 
 
     if(typeof wordb[element] == 'undefined'){
@@ -47,12 +55,17 @@ app.get('/request', function (req, res) {
       ts = wordb[element].start[numAppear] 
       te = wordb[element].end[numAppear] 
       //execSync('ffmpeg -i '+ "data/SourceVids/Trump/"+ name +'.mp4 -ss '+ ts +' -to '+ te +' -vcodec mjpeg '+clipsdir+iter+'.avi -y')
-      concatT = concatT +clipsdir+iter+".avi|"        
-      exec('ffmpeg -i ' + "data/SourceVids/Trump/" + name + '.mp4 -ss ' + ts + ' -to ' + te +' -vcodec mjpeg '+clipsdir+iter+'.avi -y',function(err, out, code){
+      concatT = concatT +clipsdir+ID+iter+".avi|"        
+      exec('ffmpeg -i ' + "data/SourceVids/Trump/" + name + '.mp4 -ss ' + ts + ' -to ' + te +' -vcodec mjpeg '+clipsdir+ID+iter+'.avi -y',function(err, out, code){
         numWord = numWord - 1
-        console.log(numWord)  
+        console.log(numWord) 
+        fproc[ID].comp = (Phrase.length - numWord)/Phrase.length*100
         if(0 == numWord){
-          exec("ffmpeg -i \"" + concatT.slice(0,-1) + "\" -c copy " + ID + ".avi -y",function(err2,out2,code2){
+          exec("ffmpeg -i \"" + concatT.slice(0,-1) + "\" " +staticdir+ ID + ".webm -y",function(err2,out2,code2){
+
+            console.log(err2)
+            fproc[ID].stat = "complete"
+
           })
         }
       })

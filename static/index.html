@@ -4,7 +4,13 @@
 <div id="loading">Loading</div>
 <input id="typebox" type="text" name="fname" style="visibility:hidden"><br>
 <input id="submit" type="submit" value="Submit" style="visibility:hidden">
-
+<br>
+<div id="complete"></div>
+<br>
+<video id="vid" width="400" controls>
+  <source src="" type="video/webm">
+  Your browser does not support HTML5 video.
+</video>
 <script>
 function getRandom(min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -16,6 +22,8 @@ var wordb = {}
 
 var xhr = new XMLHttpRequest();
 xhr.open("GET", "wordcnt.json", true);
+
+var ID = getRandom(10,1000000)
 
 xhr.onload = function (e) {
   if (xhr.readyState === 4) {
@@ -41,9 +49,9 @@ document.getElementById("typebox").addEventListener("keypress", letterTyped);
 document.getElementById("submit").addEventListener("click",submitClicked);
 
 function submitClicked() {
-
+ document.getElementById("submit").disabled = "disabled"
   //console.log(document.getElementById("typebox").value)
-  var requestURL = "/request?" + "phrase=" + encodeURI(document.getElementById("typebox").value) + "&id=" + encodeURI(getRandom(10,1000000));
+  var requestURL = "/request?" + "phrase=" + encodeURI(document.getElementById("typebox").value) + "&id=" + encodeURI(ID);
   console.log(requestURL);
   xhr.open("GET", requestURL,true);
 
@@ -63,7 +71,41 @@ function submitClicked() {
     console.error(xhr.statusText);
   };
 
-xhr.send(null);
+  xhr.send(null);
+
+  var intID = setInterval(function() {
+  
+    var vxhr = new XMLHttpRequest();
+    vxhr.open("GET", "/download?ID="+ID, true);
+
+    vxhr.onload = function (e) {
+      if (vxhr.readyState === 4) {
+        if (vxhr.status === 200) {
+          console.log(vxhr.responseText)
+          var st = JSON.parse(vxhr.responseText)
+          console.log(st.comp)
+          document.getElementById("complete").innerHTML = st.comp+" %"
+          if(st.stat == "complete"){   
+            var videlem = document.getElementById("vid");
+            videlem.src = "/"+ID+".webm"
+            videlem.autoPlay = true;
+            clearInterval(intID);
+            console.log(vxhr.responseText)
+            document.getElementById("submit").disabled = false
+        }
+        } 
+        else {
+          console.error(vxhr.statusText);
+        }
+      }
+    };
+
+    vxhr.onerror = function (e) {
+      console.error(vxhr.statusText);
+    };
+
+    vxhr.send(null);
+  }, 2000);
 
 }
 
@@ -74,6 +116,36 @@ function letterTyped() {
 
 }
 
+/*
+var intID = setInterval(function() {
+  
+  var vxhr = new XMLHttpRequest();
+  vxhr.open("GET", "/download", true);
+
+  vxhr.onload = function (e) {
+    if (vxhr.readyState === 4) {
+      if (vxhr.status === 200) {
+	if(vxhr.responseText == "complete"){   
+          var videlem = document.getElementById("vid");
+          videlem.src = "/"+ID+".webm"
+          videlem.autoPlay = true;
+          clearInterval(intID);
+          console.log(vxhr.responseText)
+      }
+      } 
+      else {
+        console.error(vxhr.statusText);
+      }
+    }
+  };
+
+  vxhr.onerror = function (e) {
+    console.error(vxhr.statusText);
+  };
+
+  vxhr.send(null);
+}, 2000);
+*/
 </script>
 
 </body>
