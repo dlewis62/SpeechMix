@@ -40,7 +40,7 @@ app.get('/request', function (req, res) {
   console.log(req.query.phrase)
   fproc[ID] = {stat:"converting",comp:0}
   Phrase.forEach(function(element){ 
-
+    element = element.replace(" ","")
     if(typeof wordb[element] == 'undefined'){
     
       console.log("word unavailible")
@@ -61,7 +61,7 @@ app.get('/request', function (req, res) {
         console.log(numWord) 
         fproc[ID].comp = (Phrase.length - numWord)/Phrase.length*100
         if(0 == numWord){
-          exec("ffmpeg -i \"" + concatT.slice(0,-1) + "\" " +staticdir+ ID + ".webm -y",function(err2,out2,code2){
+          exec("ffmpeg -i \"" + concatT.slice(0,-1) + "\" -af loudnorm=I=-16:TP=-1.5:LRA=11 " +staticdir+ ID + ".webm -y",function(err2,out2,code2){
 
             console.log(err2)
             fproc[ID].stat = "complete"
