@@ -1,16 +1,100 @@
 <!DOCTYPE html>
 <html>
-<body>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+input[id=typebox] {
+  width: 100%;
+  max-width: 800px;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[id=submit] {
+  width: 100%;
+  max-width: 800px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[id=submit]:hover {
+  background-color: #45a049;
+}
+
+div[id=backgrd] {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+div[id=header] {
+
+  border-radius: 5px;
+  background-color: #a5a5a5;
+  //text-shadow: 1px 0 0 #FFF, 0 -1px 0 #FFF, 0 1px 0 #FFF, -1px 0 0 #FFF;
+  font-weight: bold;
+  font-size: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+  margin-top: 0 !important;
+  margin-left:auto;
+  margin-right:auto;
+  text-align: left;
+  max-width:800px;
+  font-family: Sans-Serif;
+}  
+
+video[id=vid] {
+  width:100%;
+  max-width:800px;
+  
+}
+
+body[id=bod] { 
+
+ //margin-top:0;
+
+}
+
+progress {
+
+  width:100%;
+  max-width :800px;
+
+</style>
+<title>Speech Mix</title>
+<body id="bod">
+<div id="header">Speech Mix</div>
 <div id="loading">Loading</div>
-<input id="typebox" type="text" name="fname" style="visibility:hidden"><br>
+<div id = "backgrd">
+<input id="typebox" type="text" name="fname" placeholder="Enter your phrase here!" style="visibility:hidden"><br>
+<progress max="100" value="0" id="complete"></progress>
 <input id="submit" type="submit" value="Submit" style="visibility:hidden">
+<!--<div id="complete"></div>--!>
 <br>
-<div id="complete"></div>
-<br>
-<video id="vid" width="400" controls>
+<video id="vid" controls>
   <source src="" type="video/webm">
   Your browser does not support HTML5 video.
 </video>
+</div>
+</body>
 <script>
 function getRandom(min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -84,7 +168,7 @@ function submitClicked() {
           console.log(vxhr.responseText)
           var st = JSON.parse(vxhr.responseText)
           console.log(st.comp)
-          document.getElementById("complete").innerHTML = st.comp+" %"
+          document.getElementById("complete").value = st.comp
           if(st.stat == "complete"){   
             var videlem = document.getElementById("vid");
             videlem.src = "/"+ID+".webm"
@@ -148,5 +232,4 @@ var intID = setInterval(function() {
 */
 </script>
 
-</body>
 </html>
