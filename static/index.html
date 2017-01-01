@@ -75,8 +75,33 @@ body[id=bod] {
 
 progress {
 
-  width:100%;
-  max-width :800px;
+  width:100px;
+  //max-width :800px;
+  //float:left;
+  width:100%
+}
+div[id=prgt]{
+
+  font-family: Sans-Serif;
+  display:inline-block;
+  width:10%;
+  color:#7c7c7c;
+}
+
+div[id=prgtb]{
+
+  display:inline-block;
+  width:90%;
+}
+
+.container > div {
+    display: inline-block;
+    zoom: 1; /* Trigger hasLayout */
+    width: 25%;
+    text-align: center;
+    background-color: pink;
+    margin-bottom:6px;
+}
 
 </style>
 <title>Speech Mix</title>
@@ -85,12 +110,15 @@ progress {
 <div id="loading">Loading</div>
 <div id = "backgrd">
 <input id="typebox" type="text" name="fname" placeholder="Enter your phrase here!" style="visibility:hidden"><br>
-<progress max="100" value="0" id="complete"></progress>
+<div class="container">
+  <div id="A">..</div><div id="B">..</div><div id="C">..</div><div id="D">..</div>
+</div>
+<div id="prgt">Waiting</div><div id="prgtb"><progress max="100" value="0" id="complete"></progress></div>
 <input id="submit" type="submit" value="Submit" style="visibility:hidden">
 <!--<div id="complete"></div>--!>
 <br>
 <video id="vid" controls>
-  <source src="" type="video/webm">
+  <source src="intro.mp4" type="video/webm">
   Your browser does not support HTML5 video.
 </video>
 </div>
@@ -129,13 +157,13 @@ xhr.onerror = function (e) {
 
 xhr.send(null);
 
-document.getElementById("typebox").addEventListener("keypress", letterTyped);
+document.getElementById("typebox").addEventListener("keyup", letterTyped);
 document.getElementById("submit").addEventListener("click",submitClicked);
 
 function submitClicked() {
  document.getElementById("submit").disabled = "disabled"
   //console.log(document.getElementById("typebox").value)
-  var requestURL = "/request?" + "phrase=" + encodeURI(document.getElementById("typebox").value) + "&id=" + encodeURI(ID);
+  var requestURL = "/request?" + "phrase=" + encodeURI(document.getElementById("typebox").value.toLowerCase()) + "&id=" + encodeURI(ID);
   console.log(requestURL);
   xhr.open("GET", requestURL,true);
 
@@ -144,6 +172,7 @@ function submitClicked() {
       if (xhr.status === 200) {
       
         console.log(xhr.responseText);
+        document.getElementById('prgt').innerHTML = "Submitted"
       } 
       else {
         console.error(xhr.statusText);
@@ -169,6 +198,7 @@ function submitClicked() {
           var st = JSON.parse(vxhr.responseText)
           console.log(st.comp)
           document.getElementById("complete").value = st.comp
+          document.getElementById('prgt').innerHTML = "Processing"
           if(st.stat == "complete"){   
             var videlem = document.getElementById("vid");
             videlem.src = "/"+ID+".webm"
@@ -176,6 +206,7 @@ function submitClicked() {
             clearInterval(intID);
             console.log(vxhr.responseText)
             document.getElementById("submit").disabled = false
+            document.getElementById('prgt').innerHTML = "Finished"
         }
         } 
         else {
@@ -196,7 +227,38 @@ function submitClicked() {
 function letterTyped() {
 
 
-  //console.log(document.getElementById("typebox").value)
+  var phrase = document.getElementById("typebox").value.split(" ")
+  phrase = phrase[phrase.length-1]
+  document.getElementById("A").innerHTML = ".."
+  document.getElementById("B").innerHTML = ".."
+  document.getElementById("C").innerHTML = ".."
+  document.getElementById("D").innerHTML = ".."
+ 
+console.log(phrase) 
+  var iter = 0
+  for(var prop in wordb){
+//console.log(phrase.slice(0,prop.length)) 
+   if(prop.slice(0,phrase.length) == phrase){
+      //console.log(prop.slice(0,phrase.length)+" " + phrase)
+      iter = iter +1
+      if(iter == 1){
+        document.getElementById("A").innerHTML = prop
+      }
+      if(iter == 2){
+        document.getElementById("B").innerHTML = prop
+      }
+      if(iter == 3){
+        document.getElementById("C").innerHTML = prop
+      }
+      if(iter == 4){
+        document.getElementById("D").innerHTML = prop
+      }
+
+    }
+   
+
+  }
+  
 
 }
 
