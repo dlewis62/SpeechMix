@@ -94,6 +94,8 @@ div[id=prgtb]{
   width:90%;
 }
 
+
+
 .container > div {
     display: inline-block;
     zoom: 1; /* Trigger hasLayout */
@@ -101,6 +103,27 @@ div[id=prgtb]{
     text-align: center;
     background-color: pink;
     margin-bottom:6px;
+    border-radius:5px;
+}
+
+div[id=A]:hover {
+
+  background-color: #ffd1ea;
+}
+  
+div[id=B]:hover {
+
+  background-color: #ffd1ea;
+}
+
+div[id=C]:hover {
+
+  background-color: #ffd1ea;
+}
+
+div[id=D]:hover {
+
+  background-color: #ffd1ea;
 }
 
 </style>
@@ -159,6 +182,60 @@ xhr.send(null);
 
 document.getElementById("typebox").addEventListener("keyup", letterTyped);
 document.getElementById("submit").addEventListener("click",submitClicked);
+document.getElementById("A").addEventListener("click",Aclick);
+document.getElementById("B").addEventListener("click",Bclick);
+document.getElementById("C").addEventListener("click",Cclick);
+document.getElementById("D").addEventListener("click",Dclick);
+
+function Aclick(){
+
+  var phrase = document.getElementById("typebox").value.split(" ")
+  if(document.getElementById("A").innerHTML !=".."){
+
+    phrase[phrase.length-1] = document.getElementById("A").innerHTML+" "
+    document.getElementById("typebox").value = phrase.join(" ")
+    document.getElementById("typebox").focus();
+    letterTyped();
+   }
+}
+
+function Bclick(){
+
+  var phrase = document.getElementById("typebox").value.split(" ")
+  if(document.getElementById("A").innerHTML !=".."){
+
+    phrase[phrase.length-1] = document.getElementById("B").innerHTML+" "
+    document.getElementById("typebox").value = phrase.join(" ")
+    document.getElementById("typebox").focus();
+    letterTyped();
+   }
+}
+
+function Cclick(){
+
+  var phrase = document.getElementById("typebox").value.split(" ")
+  if(document.getElementById("A").innerHTML !=".."){
+
+    phrase[phrase.length-1] = document.getElementById("C").innerHTML+" "
+    document.getElementById("typebox").value = phrase.join(" ")
+    document.getElementById("typebox").focus();
+    letterTyped();
+   }
+}
+
+function Dclick(){
+
+  var phrase = document.getElementById("typebox").value.split(" ")
+  if(document.getElementById("A").innerHTML !=".."){
+
+    phrase[phrase.length-1] = document.getElementById("D").innerHTML+" "
+    document.getElementById("typebox").value = phrase.join(" ")
+    document.getElementById("typebox").focus();
+    letterTyped();
+   }
+}
+
+
 
 function submitClicked() {
  document.getElementById("submit").disabled = "disabled"
@@ -201,7 +278,7 @@ function submitClicked() {
           document.getElementById('prgt').innerHTML = "Processing"
           if(st.stat == "complete"){   
             var videlem = document.getElementById("vid");
-            videlem.src = "/"+ID+".webm"
+            videlem.src = "/"+ID+".mp4"
             videlem.autoPlay = true;
             clearInterval(intID);
             console.log(vxhr.responseText)
@@ -226,39 +303,52 @@ function submitClicked() {
 
 function letterTyped() {
 
-
-  var phrase = document.getElementById("typebox").value.split(" ")
-  phrase = phrase[phrase.length-1]
+  
+  var phrase = document.getElementById("typebox").value
+//console.log(document.getElementById("typebox").style.backgroundColor.toString(16))
+  //if(document.getElementById("typebox").style.backgroundColor == "rgb(255, 201, 178)"){
+   // console.log("red")
+    //if(phrase.substring(phrase.length-1,phrase.length) == " "){
+    // console.log("space")
+     // document.getElementById("typebox").value = phrase.substring(0,phrase.length)
+   // }
+ // }
+  var phrase = document.getElementById("typebox").value
+  phrase = phrase.split(" ")[phrase.split(" ").length-1]
   document.getElementById("A").innerHTML = ".."
   document.getElementById("B").innerHTML = ".."
   document.getElementById("C").innerHTML = ".."
   document.getElementById("D").innerHTML = ".."
- 
-console.log(phrase) 
-  var iter = 0
-  for(var prop in wordb){
+  document.getElementById("typebox").style.backgroundColor = "#ffc9b2"
+  var iter = 0 
+  if(document.getElementById("typebox").value.length == 0){
+    document.getElementById("typebox").style.backgroundColor = "#ffffff"
+   console.log("here")
+  }
+  else{
+    for(var prop in wordb){
 //console.log(phrase.slice(0,prop.length)) 
-   if(prop.slice(0,phrase.length) == phrase){
+     if(prop.slice(0,phrase.length) == phrase){
       //console.log(prop.slice(0,phrase.length)+" " + phrase)
       iter = iter +1
-      if(iter == 1){
-        document.getElementById("A").innerHTML = prop
-      }
-      if(iter == 2){
-        document.getElementById("B").innerHTML = prop
-      }
-      if(iter == 3){
-        document.getElementById("C").innerHTML = prop
-      }
-      if(iter == 4){
-        document.getElementById("D").innerHTML = prop
-      }
-
-    }
+        if(iter == 1){
+          document.getElementById("A").innerHTML = prop
+        }
+        if(iter == 2){
+          document.getElementById("B").innerHTML = prop
+        }
+        if(iter == 3){
+          document.getElementById("C").innerHTML = prop
+        }
+        if(iter == 4){
+          document.getElementById("D").innerHTML = prop
+        }
+        document.getElementById("typebox").style.backgroundColor = "#b5ffb2"
+     }
    
 
+    }
   }
-  
 
 }
 
