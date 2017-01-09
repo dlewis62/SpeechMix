@@ -239,6 +239,7 @@ function Dclick(){
 
 function submitClicked() {
  document.getElementById("submit").disabled = "disabled"
+ document.getElementById("complete").value = 0
   //console.log(document.getElementById("typebox").value)
   var requestURL = "/request?" + "phrase=" + encodeURI(document.getElementById("typebox").value.toLowerCase()) + "&id=" + encodeURI(ID);
   console.log(requestURL);
@@ -278,12 +279,13 @@ function submitClicked() {
           document.getElementById('prgt').innerHTML = "Processing"
           if(st.stat == "complete"){   
             var videlem = document.getElementById("vid");
-            videlem.src = "/"+ID+".mp4"
+            videlem.src = "/"+ID+".webm"
             videlem.autoPlay = true;
             clearInterval(intID);
             console.log(vxhr.responseText)
             document.getElementById("submit").disabled = false
             document.getElementById('prgt').innerHTML = "Finished"
+            ID = getRandom(10,1000000)
         }
         } 
         else {
@@ -304,7 +306,7 @@ function submitClicked() {
 function letterTyped() {
 
   
-  var phrase = document.getElementById("typebox").value
+//  var phrase = document.getElementById("typebox").value
 //console.log(document.getElementById("typebox").style.backgroundColor.toString(16))
   //if(document.getElementById("typebox").style.backgroundColor == "rgb(255, 201, 178)"){
    // console.log("red")
@@ -313,7 +315,7 @@ function letterTyped() {
      // document.getElementById("typebox").value = phrase.substring(0,phrase.length)
    // }
  // }
-  var phrase = document.getElementById("typebox").value
+  var phrase = document.getElementById("typebox").value.toLowerCase()
   phrase = phrase.split(" ")[phrase.split(" ").length-1]
   document.getElementById("A").innerHTML = ".."
   document.getElementById("B").innerHTML = ".."

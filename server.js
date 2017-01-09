@@ -56,14 +56,12 @@ app.get('/request', function (req, res) {
       te = wordb[element].end[numAppear] 
       //execSync('ffmpeg -i '+ "data/SourceVids/Trump/"+ name +'.mp4 -ss '+ ts +' -to '+ te +' -vcodec mjpeg '+clipsdir+iter+'.avi -y')
       concatT = concatT +clipsdir+ID+iter+".avi|"        
-      exec('ffmpeg -i ' + "data/SourceVids/Trump/" + name + '.avi -ss ' + ts + ' -to ' + te +' -vcodec copy '+clipsdir+ID+iter+'.avi -y',function(err, out, code){
+      exec('ffmpeg -i ' + "data/SourceVids/Trump/" + name + '.avi -ss ' + ts + ' -to ' + te +' -vcodec copy -acodec copy '+clipsdir+ID+iter+'.avi -y',function(err, out, code){
         numWord = numWord - 1
-        console.log(numWord) 
         fproc[ID].comp = (Phrase.length - numWord)/Phrase.length*100
         if(0 == numWord){
-          exec("ffmpeg -i \"" + concatT.slice(0,-1) + "\" -af loudnorm=I=-16:TP=-1.5:LRA=11 " +staticdir+ ID + ".mp4 -y",function(err2,out2,code2){
+          exec("ffmpeg -i \"" + concatT.slice(0,-1) + "\" -af loudnorm=I=-16:TP=-1.5:LRA=11 " +staticdir+ ID + ".webm -y",function(err2,out2,code2){
 
-            console.log(err2)
             fproc[ID].stat = "complete"
 
           })
